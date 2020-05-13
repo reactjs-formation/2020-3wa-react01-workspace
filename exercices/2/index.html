@@ -25,27 +25,25 @@
     -->
     <div id="root"></div>
     <script type="text/babel">
-      setInterval(() => {
-        class Clock extends React.Component {
+      class Clock extends React.Component {
 
-          constructor(){
-            super()
-            
-            this.date = new Date()
-          }
-
-          render(){
-              return <div>
-                {this.date.toLocaleTimeString()}
-              </div>
-          }
+        constructor(){
+          super()
         }
+
+        render(){
+            return <div>
+              {(new Date()).toLocaleTimeString()}
+            </div>
+        }
+      }
       
+      setInterval(() => {
         ReactDOM.render(
           <Clock />,
           document.getElementById('root')
         );
       }, 1000)
-      </script>
+    </script>
   </body>
 </html>
