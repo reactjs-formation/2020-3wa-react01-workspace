@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <style>
+      
+    </style>
+  </head>
+
+  <body>
+    <!-- 
+        gérez une connexion login/password en React.
+        Implémentez la gestion des erreurs.
+    -->
+    <div id="root"></div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script type="text/babel">
+      
+    class App extends React.Component{
+      constructor(props){
+        super(props);
+        this.state = {
+          connexion: {
+            email: 'test@test.fr',
+            password: 'test',
+            error: {
+              email: []
+            }
+          },
+          email: ""
+        }
+      }
+
+      onSubmit = (e) => {
+        e.preventDefault()
+
+        let error = {
+          email: []
+        }
+        
+        if (this.state.email === ""){
+          console.log("Le champ ne doit pas etre vide");
+          this.state.error.email.push("Le champ ne doit pas etre vide")
+          return;
+        }
+
+        const {email, password} = this.state.connexion;
+
+        if (this.state.email === email) {
+          console.log('email ok')
+          
+        } else {
+          console.log('email Ko')
+          error.email.push("l'email n'est pas le bon")
+          this.setState({
+            error: {
+              email: [...error.email, ...this.state.connexion.error.email ]
+            }
+          }, () => {
+            console.log('debug', this.state.connexion.error, error)
+          })
+        }
+      }
+
+      onChangeEmail = (e) => {
+        this.setState({
+          email: e.target.value
+        })
+      }
+      
+      render(){
+        return <div className="container">
+          <div className="row justify-content-md-center">
+            <div className="col-5 pt-5">
+              <form onSubmit={this.onSubmit}>
+                <div className="form-group">
+                  <label htmlFor="exampleInputEmail1">Email address</label>
+                  <input type="email" value={this.state.email} onChange={this.onChangeEmail} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
+                  {
+                    this.state.connexion.error.email.map((elm,i) => {
+                      return <small id="emailHelp" className="form-text text-danger">{elm}</small>
+                    })
+                  }
+                  
+                </div>
+                <div className="form-group">
+                  <label htmlFor="exampleInputPassword1">Password</label>
+                  <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" />
+                </div>
+                <button type="submit" className="btn btn-primary">Soumettre</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      }
+    }
+    
+    ReactDOM.render(<App />,document.getElementById('root'));
+    </script>
+  </body>
+</html>

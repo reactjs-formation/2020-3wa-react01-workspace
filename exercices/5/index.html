@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <style>
+      
+    </style>
+  </head>
+
+  <body>
+    <!-- 
+        Créez un formulaire pour ajouter à une liste user des utilisateurs, vous forcerez
+        la saisie en majuscule dans le champ de saisie.
+        Vérifiez que l’utilisateur n’existe pas déjà dans la liste, si l’utilisateur se trompe.
+        Alors affichez un message d’avertissement.
+        Gérez également le cas où le champ est vide dans l’ajout d’un utilisateur.
+        Affichez la liste sous le formulaire (Components conditionnels).
+    -->
+    <div id="root"></div>
+    <script type="text/babel">
+      
+    class App extends React.Component{
+      constructor(props){
+        super(props);
+        this.state = {
+          users: [],
+          input1: ""
+        }
+      }
+
+      onSubmit = (e) => {
+        e.preventDefault()
+        console.log('submit', this.state.input1)
+        const input = this.state.input1.toUpperCase()
+
+        if (input === ""){
+          alert("Le champ ne doit pas etre vide");
+          return;
+        }
+
+        if(this.state.users.includes(input)) {
+          alert(input+' existe déjà')
+          return false
+        }
+
+        this.setState({
+          users: [...this.state.users, input]
+        }, () => {
+          console.log(this.state.users)
+        })
+      }
+
+      onChangeInput = (e) => {
+        this.setState({
+          input1: e.target.value.toUpperCase()
+        })
+      }
+      
+      render(){
+        return <div>
+          <form onSubmit={this.onSubmit} id="myForm">
+            <input type="text" value={this.state.input1} onChange={this.onChangeInput} />
+            <input type="submit" value="Valider" />
+          </form>
+          <ol>
+            {
+              this.state.users.map((elm, i) => <li key={i}>{elm}</li>)
+            }
+          </ol>
+        </div>
+      }
+    }
+    
+    ReactDOM.render(<App />,document.getElementById('root'));
+    </script>
+  </body>
+</html>

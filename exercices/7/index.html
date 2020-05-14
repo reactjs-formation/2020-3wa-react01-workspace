@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  </head>
+  <body>
+    <!--
+      Vous allez créer un script React permettant de réaliser une conversion de nombre
+      décimal vers un nombre binaire.
+      Créez deux composants App et BaseNumberInput. Le composant App
+      contiendra deux composants BaseNumberInput : respectivement pour saisir le
+      nombre décimal et afficher le nombre binaire.
+    -->
+    <div id="root"></div>
+    
+    <script type="text/babel">
+
+    class BaseNumberInput extends React.Component{
+      constructor(props){
+        super(props);
+        this.state = {
+          valeur : 0
+        }
+      }
+
+      /**
+      * Converti une valeur décimale en représentation binaire de type string
+      *
+      * @param {number} dec valeur décimale
+      * @return {string} valeur binaire
+      */
+      convertDecimalToBinary = (dec) => {
+        let binary = "";
+        let temp = dec;
+    
+        while(temp > 0){
+            if(temp % 2 == 0)
+                binary = "0" + binary;
+            else 
+                binary = "1" + binary;
+                
+            temp = Math.floor(temp / 2);
+        }
+    
+        return binary;
+      }
+
+      /**
+      * Converti une representation binaire en nombre decimal
+      *
+      * @param {string} bin valeur binaire
+      * @return {int} valeur decimal
+      */
+      convertBinaryToDecimal = (bin) => {
+        return parseInt(bin, 2);
+      }
+
+      /**
+      * Met à jour les nouveaux props reçus
+      * Cette fonction est asynchrone et ne retourne rien
+      */
+      componentWillReceiveProps(nextProps) {
+        
+          this.setState({
+            valeur: nextProps.valeur
+          }, () => {
+            console.log('componentWillReceiveProps', this.state.valeur, nextProps)
+          })
+      }
+      
+
+      /**
+      * Execution du code contenu dans cette fonction à chaque
+      * frappe du clavier sans un champ input. 
+      * Ce n'est pas une fonction de react mais une fonction décidé par nous 
+      */
+      handleChange = (event) =>{
+        
+        // si notre composant posséde une fonction dispatchBinary provenant du parent
+        // et que la valeur de l'input correspond à du binaire
+        if (this.props.dispatchBinary && event.target.value.match(/^[01]+$/)) {
+
+          // valeur du input qui subit les touche du clavier
+          const bin = event.target.value;
+          // convertion de la valeur du input en décimale
+          const dec = this.convertBinaryToDecimal(event.target.value);
+          // execute la fonction parent qui met à jour les props des
+          // composants enfants avec comme argument nos nouvelles valeurs
+          // à mettre à jour.
+          this.props.dispatchBinary(dec, bin);
+          
+          
+        // sinon on execute le code qui reste à condition que le composant
+        // contient bien une fonction dispatchDecimal procenant du parent
+        } else if (this.props.dispatchDecimal) {
+          // valeur du input qui subit les touche du clavier
+          const dec = event.target.value;
+          // convertion de la valeur du input en faux binaire car il 
+          // est du type string
+          const bin = this.convertDecimalToBinary(event.target.value);
+          // execute la fonction parent qui met à jour les props des
+          // composants enfants avec comme argument nos nouvelles valeurs
+          // à mettre à jour.
+          this.props.dispatchDecimal(dec, bin);
+          
+        }
+      }
+
+      // Rendu d'un input mis à jours selon les conditions du handleChange
+      render(){
+        return(
+          <input type="text" value={this.state.valeur} onChange={this.handleChange}/>
+        )
+      }
+    }
+
+    class App extends React.Component{
+      constructor(props) {
+        super(props);
+        this.state = {
+          valeurDec : 0, // valeur du input par defaut au démarrage de la page
+          valeurBin : 0 // valeur du input par defaut au démarrage de la page
+        }
+      }
+
+      /**
+      * Distribue les valeurs aux conposants enfant BaseNumberInput.
+      * Cette fonction est appelé depuis les props des composants enfants
+      */
+      dispatchValues = (dec, bin) => {
+        this.setState({
+          valeurBin: bin,
+          valeurDec: dec
+        })
+      }
+
+
+      render(){
+        /*
+        Dans le premier composant la fonction dispatchValues devient dispatchBinary.
+        Dans le second composant la fonction dispatchValues devient dispatchDecimal.
+        La fonction dispatchValues devenue soit dispatchBinary ou dispatchDecimal est accèssible
+        depuis les props, par this.props du composant BaseNumberInput
+        */
+        return(
+          <div>
+            <BaseNumberInput valeur={this.state.valeurBin} dispatchBinary={this.dispatchValues}  />
+            <BaseNumberInput valeur={this.state.valeurDec} dispatchDecimal={this.dispatchValues}  />
+          </div>
+        )
+      }
+    }
+
+     ReactDOM.render(
+         <App/>,
+         document.getElementById("root")
+     );
+    </script>
+  </body>
+</html>

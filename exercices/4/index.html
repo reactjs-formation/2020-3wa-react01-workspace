@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <style>
+      body{
+        width: 375px;
+      }
+      button{
+        background: rgb(30, 133, 255);;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        border-width: 0;
+        color: white;
+        margin-right: 50px;
+        outline: none;
+      }
+      h1{
+        text-align: right;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- 
+        Créez deux compteurs (composants) qui se déclenchent à l’aide d’un bouton start.
+        Le premier compteur s’incrémente de +1, le deuxième compteur s’incrémente
+        de +2. Vous pouvez jouer avec les props des composants pour fixer la valeur de
+        l’incrémentation, chaque composant aura ainsi sa propre configuration.
+        Associez pour chaque compteur un bouton stop qui permet d’arrêter le compteur
+        correspondant.
+        Mettez une propriété disabled sur le start et le stop, disabled sera placé sur
+        stop si on n’a pas appuyé sur start et réciproquement.
+    -->
+    <div id="root"></div>
+    <script type="text/babel">
+    // Component
+
+    //La classe parente controle le cycle
+    class App extends React.Component{
+      constructor(props){
+        super(props);
+      }
+      
+      render(){
+        return <div>
+          <Counter init="0" step="1" reset={true}  />
+          <Counter init="1" step="2" reset={false} />
+        </div>
+      }
+    }
+
+    class Counter extends React.Component{
+
+      constructor(props){
+        super(props);
+        this.state = {
+          counter: parseInt(this.props.init)
+        }
+        this.pause = true;
+
+        this.step = parseInt(this.props.step);
+        
+        setInterval(()=>{
+          
+            if (this.pause) return;
+
+            this.setState({
+              counter: this.state.counter + this.step
+            });
+        },1000)
+
+
+      }
+
+      onClickStart = (e) => {
+        
+        console.log('onClickStart')
+        this.pause = false;
+      }
+
+      onClickStop = () => {
+        this.pause = true;
+        this.setState({
+          counter: parseInt(this.props.init)
+        });
+      }
+      
+      onClickReset = () => {
+        
+        this.setState({
+          counter: parseInt(this.props.init)
+        });
+      }
+
+      render(){
+        
+        return (
+          <div className="counter" >
+            <button onClick={this.onClickStart}>Start (+{this.props.step})</button>
+            <button onClick={this.onClickStop}>Stop</button>
+            {this.props.reset && <button onClick={this.onClickReset}>Reset</button>}
+            <h1>{this.state.counter}</h1>
+          </div>
+        )
+      }
+    }
+
+    // Rendu dans le DOM
+    ReactDOM.render(<App />,document.getElementById('root'));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- babel => compilation du JSX -->
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <style>
+      .heading{
+        color: purple;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- 
+        Créez deux composants (classes), la première App contiendra une horloge, c’est à
+        dire un composant Clock. Dans le composant App vous allez gérer le démontage
+        de l’horloge : au bout de 5 secondes l’horloge est démontée. En utilisant le cycle
+        de vie trouvez la bonne manière d’implémenter le démarrage et l’arrêt de cette
+        horloge. Vous ne supprimerez pas le container mais uniquement le composant
+        Clock pour répondre à la problématique posée dans cet exercice.
+    -->
+    <div id="root"></div>
+    <script type="text/babel">
+    // Component
+
+    //La classe parente controle le cycle
+    class App extends React.Component{
+      constructor(props){
+        super(props);
+        
+        this.state = {unmount : false,...this.props, intervalID:null}
+        
+        let count = 0;
+        
+        this.intervalID = setInterval(()=>{
+          count++;
+          console.log('setInterval', count)
+          this.setState({
+            time : (new Date()).toLocaleTimeString(),
+            intervalID: this.intervalID,
+            unmount : count < 5 ? false : true
+          });
+        },1000)
+      }
+      
+      render(){
+        return(!this.state.unmount ? <Horloge {...this.state}/> : <div>Horloge démonté</div> )
+      }
+    }
+
+    class Horloge extends React.Component{
+
+      constructor(props){
+        super(props);
+        console.log('Class is created');
+      }
+      render(){
+        console.log('Render');
+        return (
+          <div className="heading" id="horloge" >
+            <h1>{this.props.time}</h1>
+          </div>
+        )
+      }
+      componentDidMount(){
+        console.log('Component is mounted');
+      }
+      componentDidUpdate(){
+        console.log('Render is updated');
+      }
+      componentWillUnmount(){
+        console.log('Component Horloge is unmounted');
+        clearInterval(this.props.intervalID)
+      }
+    }
+
+    // Rendu dans le DOM
+    ReactDOM.render(<App time={(new Date()).toLocaleTimeString()} />,document.getElementById('root'));
+    </script>
+  </body>
+</html>
