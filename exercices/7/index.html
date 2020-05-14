@@ -23,7 +23,7 @@
       constructor(props){
         super(props);
         this.state = {
-          valeur : 0
+          valeur : this.props.valeur
         }
       }
 
@@ -60,16 +60,16 @@
       }
 
       /**
-      * Met à jour les nouveaux props reçus
-      * Cette fonction est asynchrone et ne retourne rien
+      * Met à jour le state local si les nouveaux props reçus on changées
+      * Cette fonction retourne l'argument d'un setState sinon null
       */
-      componentWillReceiveProps(nextProps) {
+      static getDerivedStateFromProps(props, state) {
         
-          this.setState({
-            valeur: nextProps.valeur
-          }, () => {
-            console.log('componentWillReceiveProps', this.state.valeur, nextProps)
-          })
+        if (props.valeur !== state.valeur) {
+          return { valeur: props.valeur };
+        }
+
+        return null;
       }
       
 
