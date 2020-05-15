@@ -27,7 +27,6 @@
       Créez deux composants App et BaseNumberInput. Le composant App
       contiendra deux composants BaseNumberInput : respectivement pour saisir le
       nombre décimal et afficher le nombre binaire.
-      https://pastebin.com/YvCMijtW
     -->
     <div id="root"></div>
     
@@ -76,6 +75,7 @@
       /**
       * Met à jour le state local si les nouveaux props reçus on changées
       * Cette fonction retourne l'argument d'un setState sinon null
+      * https://fr.reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html
       */
       static getDerivedStateFromProps(props, state) {
         
