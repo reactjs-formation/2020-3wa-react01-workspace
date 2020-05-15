@@ -71,20 +71,6 @@
       convertBinaryToDecimal = (bin) => {
         return parseInt(bin, 2);
       }
-
-      /**
-      * Met à jour le state local si les nouveaux props reçus on changées
-      * Cette fonction retourne l'argument d'un setState sinon null
-      * https://fr.reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html
-      */
-      static getDerivedStateFromProps(props, state) {
-        
-        if (props.valeur !== state.valeur) {
-          return { valeur: props.valeur };
-        }
-
-        return null;
-      }
       
 
       /**
@@ -98,7 +84,7 @@
         // et que la valeur de l'input correspond à du binaire
         if (this.props.dispatchBinary && event.target.value.match(/^[01]+$/)) {
 
-          // valeur du input qui subit les touche du clavier
+          // valeur du input qui subit les touches du clavier
           const bin = event.target.value;
           // convertion de la valeur du input en décimale
           const dec = this.convertBinaryToDecimal(event.target.value);
@@ -109,7 +95,7 @@
           
           
         // sinon on execute le code qui reste à condition que le composant
-        // contient bien une fonction dispatchDecimal procenant du parent
+        // contient bien une fonction dispatchDecimal provenant du parent
         } else if (this.props.dispatchDecimal) {
           // valeur du input qui subit les touche du clavier
           const dec = event.target.value;
@@ -127,7 +113,7 @@
       // Rendu d'un input mis à jours selon les conditions du handleChange
       render(){
         return(
-          <input type="text" value={this.state.valeur} onChange={this.handleChange}/>
+          <input type="text" value={this.props.valeur} onChange={this.handleChange}/>
         )
       }
     }
