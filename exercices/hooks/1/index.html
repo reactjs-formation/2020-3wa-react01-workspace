@@ -11,6 +11,8 @@
     <div id="root"></div>
     
     <script type="text/babel">
+
+        const url = `https://jsonplaceholder.typicode.com/users`;
     
         const Counter = (props) => {
 
@@ -55,29 +57,32 @@
                 idCounter.current = setInterval(funcInc, 1000)
             }
             
-
             return (
                 <div>
                     <div>Compteur: <span>{counter}</span></div>
-                    <div><button onClick={reset}>Reset</button></div>
-                    <div><button onClick={stop}>Stop</button></div>
-                    <div><button onClick={start}>Start</button></div>
-                    <div><button onClick={props.unMount}>unMount</button></div>
+                    <div><button onClick={reset} disabled={!(counter>0)}>Reset</button></div>
+                    <div><button onClick={stop} disabled={!(idCounter.current !== -1)}>Stop</button></div>
+                    <div><button onClick={start} disabled={!(idCounter.current === -1)}>Start</button></div>
                 </div>
             )
         }
 
         const App = (props) => {
 
-            const [load, setLoad] = React.useState(true);
+            const [load, setLoad] = React.useState(false);
 
             const unMount = () => { 
                 setLoad(!load);
                 console.log('unMount', load)
             }
 
+            const AppLoop = () => {
+                console.log('app loop')
+            }
+
             return <div>
-                {load && <Counter unMount={unMount} />}
+                {load && <Counter />}
+                <div><button onClick={unMount}>{load ? 'unMount' : 'Mount'}</button></div>
             </div>
         }
 
