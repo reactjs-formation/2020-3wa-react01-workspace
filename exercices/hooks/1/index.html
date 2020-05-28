@@ -56,7 +56,7 @@
                 setCounter(0);
                 idCounter.current = setInterval(funcInc, 1000)
             }
-            
+
             return (
                 <div>
                     <div>Compteur: <span>{counter}</span></div>
@@ -75,11 +75,7 @@
                 setLoad(!load);
                 console.log('unMount', load)
             }
-
-            const AppLoop = () => {
-                console.log('app loop')
-            }
-
+            
             return <div>
                 {load && <Counter />}
                 <div><button onClick={unMount}>{load ? 'unMount' : 'Mount'}</button></div>
