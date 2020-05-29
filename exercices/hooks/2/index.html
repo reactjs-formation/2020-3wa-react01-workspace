@@ -13,13 +13,10 @@
     <script type="text/babel">
 
         const url = `https://jsonplaceholder.typicode.com/users`;
-        
 
-        const App =  (props) => {
-
-            const [data, setData] = React.useState(false);
-            const [result, setResult] = React.useState([]);
-
+        const Search = (props) => {
+            const [data, setData] = React.useState([]);
+            
             React.useEffect( () => {
                 
                 (async () => {
@@ -37,34 +34,64 @@
             }, [])
 
             let hChange = (e) => {
-                setResult(result => [])
+                if (e.target.value === '') {
 
-                if (e.target.value === '') return;
+                    props.dataPropagation([]);
+                    return;
+                }
 
+                let arr = [];
+                // data correspond a un useState
                 for (const key in data) {
                     if (data.hasOwnProperty(key)) {
                         const elm = data[key];
                         const regex = RegExp('.*'+e.target.value+'.*');
                         if (regex.test(elm.name)) {
                             console.log('Test', elm.name)
-                            setResult(result => [...result, elm.name])
+                            arr.push(elm.name)
                         }
                     }
                 }
-                console.log('length result', result.length)
+                props.dataPropagation(arr);
             }
+
+            return (
+                <div>
+                    <input type="text" onChange={hChange} placeholder={'Rechercher un nom'} />
+                </div>
+            )
+        }
+
+        const Users =  (props) => {
             
             return <div>
                 <div>
-                    <input type="text" onChange={hChange} placeholder={'rechercher un nom'} />
-                    { (result.length !== 0) && <div>Il y a {result.length} résultats</div>}
+                    { (props.result.length !== 0) && <div>Il y a {props.result.length} résultats</div>}
                     <ul>
-                        {result.map((name, i) => (
+                        {props.result && props.result.map((name, i) => (
                             <li key={i}>{name}</li>
                         ))}
                     </ul>
                 </div>
             </div>
+        }
+        
+        const App =  (props) => {
+
+            const [result, setResult] = React.useState([]);
+
+            const dataPropagation = (resultSearch) => {
+                console.log('dataPropagation',resultSearch)
+                setResult(result => (result = resultSearch))
+            }
+            
+            return (
+                <div>
+                    <Search dataPropagation={dataPropagation} />
+                    <Users result={result} />
+                </div>
+            )
+
         }
 
         ReactDOM.render(
